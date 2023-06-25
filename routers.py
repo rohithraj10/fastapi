@@ -58,10 +58,11 @@ router = APIRouter()
 @router.post("/file_operation", responses={400: {"model": ErrorResponse}})
 async def perform_file_operation(file: File):
     file_path = Path(file.file_path)
-
+    #File Verification
     if file.operation == "check_exists":
         file_exists = file_path.exists()
         return SuccessResponse(status="success", exists=file_exists)
+    #File Validation
     elif file.operation == "validate":
         if not file_path.exists():
             return ErrorResponse(status="failure", error="File does not exist.")
@@ -83,6 +84,7 @@ async def perform_file_operation(file: File):
             )
         except Exception as e:
             return ErrorResponse(status="failure", error=str(e))
+    #File Information Retrieval
     elif file.operation == "retrieve_info":
         if not file_path.exists():
             return ErrorResponse(status="failure", error="File does not exist.")
@@ -98,6 +100,7 @@ async def perform_file_operation(file: File):
             )
         except Exception as e:
             return ErrorResponse(status="failure", error=str(e))
+    #File Manipulations
     elif file.operation == "copy":
         if not file_path.exists():
             return ErrorResponse(status="failure", error="Source file does not exist.")
